@@ -714,19 +714,13 @@
           <p>
             Podrás recoger tu sorpresa en <strong>Galerías</strong> presentando la siguiente contraseña secreta.
             <br><br>
-            📍 <strong>Paso importante:</strong> Pregúntame a mí ahorita en la videollamada por la <strong>ubicación exacta</strong> dentro de Galerías y dime la contraseña que te di.
+            📍 <strong>Paso importante:</strong> Pregúntame a mí ahorita en la videollamada por la <strong>ubicación exacta</strong> dentro de Galerías.
           </p>
 
           <div class="password-box">
-            <label class="password-label" for="secretPass">🔑 Contraseña Secreta</label>
-            <input
-              type="text"
-              id="secretPass"
-              class="password-input"
-              placeholder="0BD7BD38"
-              autocomplete="off"
-            />
-            <button type="button" class="lock-btn" id="savePassBtn" onclick="toggleLockPass()">Guardar contraseña en pantalla</button>
+            <div class="password-label">🔑 Contraseña Secreta</div>
+            <div id="secretPassText" style="font-size: 1.45rem; font-weight: 800; color: var(--pink-deep); letter-spacing: 3px; padding: 10px 12px; background: #fff9fc; border: 1.5px solid #f9a8d4; border-radius: 12px; user-select: all;">0BD7BD38</div>
+            <button type="button" class="lock-btn" id="copyPassBtn" onclick="copySecretPass()">📋 Copiar contraseña</button>
           </div>
 
           <div class="hint-pill">
@@ -915,28 +909,32 @@
 
     renderQuestion();
 
-    // 4. Password lock helper
-    let passLocked = false;
-    function toggleLockPass() {
-      const inp = document.getElementById('secretPass');
-      const btn = document.getElementById('savePassBtn');
-      if (!passLocked) {
-        if (!inp.value.trim()) {
-          inp.focus();
-          return;
-        }
-        inp.readOnly = true;
-        inp.style.borderColor = '#16a34a';
-        inp.style.background = '#f0fdf4';
-        btn.textContent = 'Editar contraseña';
-        passLocked = true;
+    // 4. Copy secret password helper
+    function copySecretPass() {
+      const code = '0BD7BD38';
+      const btn = document.getElementById('copyPassBtn');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = '✅ ¡Contraseña copiada!';
+          btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+          setTimeout(() => {
+            btn.textContent = '📋 Copiar contraseña';
+            btn.style.background = 'linear-gradient(135deg, #f472b6, #ec4899)';
+          }, 2200);
+        });
       } else {
-        inp.readOnly = false;
-        inp.style.borderColor = '#f9a8d4';
-        inp.style.background = '#fff9fc';
-        btn.textContent = 'Guardar contraseña en pantalla';
-        passLocked = false;
-        inp.focus();
+        const temp = document.createElement('textarea');
+        temp.value = code;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+        btn.textContent = '✅ ¡Contraseña copiada!';
+        btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+        setTimeout(() => {
+          btn.textContent = '📋 Copiar contraseña';
+          btn.style.background = 'linear-gradient(135deg, #f472b6, #ec4899)';
+        }, 2200);
       }
     }
 
